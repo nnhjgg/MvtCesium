@@ -28,8 +28,8 @@ define(['../Core/defaultValue','../Core/defined','../Core/DeveloperError','../Co
             var rectangle = this._tilingScheme.rectangle;
             mapExtent = [rectangle.west,rectangle.south,rectangle.east,rectangle.north];
         }
-        // this._resolutions = defaultValue(options.resolutions, ol.tilegrid.resolutionsFromExtent(mapExtent, 22, this._tileWidth));
-        this._resolutions = options.resolutions;
+        this._resolutions = defaultValue(options.resolutions, resolutionsFromExtent(mapExtent, 22, this._tileWidth));
+        // this._resolutions = options.resolutions;
 
 
         this._glStyle = options.glStyle;
@@ -48,7 +48,8 @@ define(['../Core/defaultValue','../Core/defined','../Core/DeveloperError','../Co
             declutter:true,
             source: new ol.source.VectorTile({
                 format: new ol.format.MVT(),
-                url : "http://10.18.1.139:8089/egis/base/v1/wvts/tiles/11/{z}/{x}/{y}.pbf",
+                // url : "http://10.18.1.139:8089/egis/base/v1/wvts/tiles/11/{z}/{x}/{y}.pbf",
+                url : options.url,
                 projection: projection,
                 //wrapX: false,
                 tileGrid: new ol.tilegrid.TileGrid({
@@ -70,6 +71,10 @@ define(['../Core/defaultValue','../Core/defined','../Core/DeveloperError','../Co
                 zoom: 2
             })
         })*/
+        function resolutionsFromExtent(e, o, t) {
+            for (var r = void 0 !== o ? o : ol.DEFAULT_MAX_ZOOM, i = ol.extent.getHeight(e), n = ol.extent.getWidth(e), l = ol.size.toSize(void 0 !== t ? t : ol.DEFAULT_TILE_SIZE), a = Math.max(n / l[0], i / l[1]), s = r + 1, p = new Array(s), g = 0; g < s; ++g) { p[g] = a / (2 ** g); }
+            return p;
+        }
     }
 
     defineProperties(MVTProvider.prototype, {
